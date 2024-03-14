@@ -1,11 +1,11 @@
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const SearchBar = ({ onSubmit }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const inputValue = event.currentTarget.elements.query.value;
     if (inputValue.trim() === "") {
-      <Toaster position="top-center" />;
+      toast("Please enter some text to get a result!");
     }
     onSubmit(inputValue);
     event.currentTarget.reset();
@@ -13,6 +13,16 @@ const SearchBar = ({ onSubmit }) => {
 
   return (
     <header>
+      <Toaster
+        toastOptions={{
+          // Define default options
+
+          style: {
+            background: "grey",
+            color: "#fff",
+          },
+        }}
+      />
       <form onSubmit={handleFormSubmit}>
         <input
           type="text"

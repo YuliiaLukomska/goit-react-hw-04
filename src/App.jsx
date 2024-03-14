@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import SearchBar from "./SearchBar/SearchBar";
+import SearchBar from "./components/SearchBar/SearchBar";
 import fetchPhotos from "./services/fetchPhotos";
+import Loader from "./components/Loader/Loader";
 
 function App() {
+  const [images, setImages] = useState(null);
   const [query, setQuery] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSetQueryValue = (queryValue) => {
     setQuery(queryValue);
@@ -15,12 +18,13 @@ function App() {
     }
     const getPhotosByQuery = async () => {
       try {
+        setIsLoading(true);
         const result = await fetchPhotos(query);
-        console.log(result.data);
+        console.log(result.data.results);
       } catch (error) {
         console.log(error);
       } finally {
-        console.log("Loader - false");
+        setIsLoading(false);
       }
     };
     getPhotosByQuery();
@@ -29,6 +33,14 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={onSetQueryValue} />
+      {isLoading && <Loader />}
+      <ul>
+        {images !== null &&
+          Array.isArray(images) &&
+          images.map((image) => {
+            <li key={image.key}></li>;
+          })}
+      </ul>
     </>
   );
 }
