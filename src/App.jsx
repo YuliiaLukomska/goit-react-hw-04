@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar/SearchBar";
+import fetchPhotos from "./services/fetchPhotos";
 
 function App() {
   const [query, setQuery] = useState(null);
@@ -8,10 +9,21 @@ function App() {
     setQuery(queryValue);
   };
 
-  useState(() => {
+  useEffect(() => {
     if (query === null) {
       return;
     }
+    const getPhotosByQuery = async () => {
+      try {
+        const result = await fetchPhotos(query);
+        console.log(result.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        console.log("Loader - false");
+      }
+    };
+    getPhotosByQuery();
   }, [query]);
 
   return (

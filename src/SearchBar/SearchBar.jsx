@@ -1,11 +1,14 @@
+import { Toaster } from "react-hot-toast";
+
 const SearchBar = ({ onSubmit }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const inputValue = event.currentTarget.elements.query.value;
     if (inputValue.trim() === "") {
-      alert("Enter some text for getting result");
+      <Toaster position="top-center" />;
     }
     onSubmit(inputValue);
+    event.currentTarget.reset();
   };
 
   return (
