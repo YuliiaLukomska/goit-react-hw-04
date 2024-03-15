@@ -4,15 +4,25 @@ import fetchPhotos from "./services/fetchPhotos";
 import Loader from "./components/Loader/Loader";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Error from "./components/Error/Error";
+import Empty from "./components/Empty/Empty";
+import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 
 function App() {
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
   const [query, setQuery] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
 
   const onSetQueryValue = (queryValue) => {
     setQuery(queryValue);
+    setImages([]);
+    setPage(1);
+    setIsEmpty(false);
+    setIsError(false);
+    setIsVisible(false);
   };
 
   useEffect(() => {
@@ -23,9 +33,14 @@ function App() {
       try {
         setIsError(false);
         setIsLoading(true);
-        const result = await fetchPhotos(query);
-        console.log(result.data.results);
-        setImages(result.data.results);
+        const { results, total, total_pages } = await fetchPhotos(query, page);
+        if (results.length === 0) {
+          setIsEmpty(true);
+          return;
+        }
+        setImages((prevState) => [...prevState, ...results]);
+        // якщо у нас page<загальної сторінки,то кнопка loadMore буде показуватись
+        setIsVisible(page < total_pages);
       } catch (error) {
         setIsError(true);
       } finally {
@@ -33,14 +48,20 @@ function App() {
       }
     };
     getPhotosByQuery();
-  }, [query]);
+  }, [query, page]);
+
+  const loadMore = () => {
+    setPage((prevState) => prevState + 1);
+  };
 
   return (
     <>
       <SearchBar onSubmit={onSetQueryValue} />
       {isError && <Error />}
-      <ImageGallery images={images} />
+      {images.length > 0 && <ImageGallery images={images} />}
+      {isVisible && <LoadMoreBtn onClick={loadMore} isLoading={isLoading} />}
       {isLoading && <Loader />}
+      {isEmpty && <Empty />}
     </>
   );
 }
