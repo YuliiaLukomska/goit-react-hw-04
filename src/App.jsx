@@ -6,6 +6,7 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Error from "./components/Error/Error";
 import Empty from "./components/Empty/Empty";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "./components/ImageModal/ImageModal";
 
 function App() {
   const [images, setImages] = useState([]);
@@ -15,6 +16,9 @@ function App() {
   const [isEmpty, setIsEmpty] = useState(false);
   const [page, setPage] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalUrl, setModalUrl] = useState("");
+  const [modalAlt, setModalAlt] = useState("");
 
   const onSetQueryValue = (queryValue) => {
     setQuery(queryValue);
@@ -54,14 +58,33 @@ function App() {
     setPage((prevState) => prevState + 1);
   };
 
+  const handleOpen = (url, alt) => {
+    setShowModal(true);
+    setModalUrl(url);
+    setModalAlt(alt);
+  };
+  const handleClose = () => {
+    setShowModal(false);
+    setModalUrl("");
+    setModalAlt("");
+  };
+
   return (
     <>
       <SearchBar onSubmit={onSetQueryValue} />
       {isError && <Error />}
-      {images.length > 0 && <ImageGallery images={images} />}
+      {images.length > 0 && (
+        <ImageGallery images={images} handleOpen={handleOpen} />
+      )}
       {isVisible && <LoadMoreBtn onClick={loadMore} isLoading={isLoading} />}
       {isLoading && <Loader />}
       {isEmpty && <Empty />}
+      <ImageModal
+        modalIsOpen={showModal}
+        closeModal={handleClose}
+        src={modalUrl}
+        alt={modalAlt}
+      />
     </>
   );
 }

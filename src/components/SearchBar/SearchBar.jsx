@@ -4,8 +4,9 @@ const SearchBar = ({ onSubmit }) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const inputValue = event.currentTarget.elements.query.value;
-    if (!inputValue) {
+    if (!inputValue.trim()) {
       toast("Please enter some text to get a result!");
+      return;
     }
     onSubmit(inputValue);
     event.currentTarget.reset();

@@ -1,6 +1,8 @@
-const ImageCard = ({ picture }) => {
+const ImageCard = ({ picture, handleOpen }) => {
   return (
-    <div>
+    <div
+      onClick={() => handleOpen(picture.urls.regular, picture.alt_description)}
+    >
       <img src={picture.urls.small} alt={picture.alt_description} />
     </div>
   );
