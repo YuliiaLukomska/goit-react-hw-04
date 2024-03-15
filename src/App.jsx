@@ -37,7 +37,7 @@ function App() {
       try {
         setIsError(false);
         setIsLoading(true);
-        const { results, total, total_pages } = await fetchPhotos(query, page);
+        const { results, total_pages } = await fetchPhotos(query, page);
         if (results.length === 0) {
           setIsEmpty(true);
           return;
