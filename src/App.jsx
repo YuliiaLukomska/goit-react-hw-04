@@ -13,6 +13,7 @@ function App() {
   const [query, setQuery] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [errorName, setErrorName] = useState("");
   const [isEmpty, setIsEmpty] = useState(false);
   const [page, setPage] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
@@ -37,6 +38,7 @@ function App() {
       try {
         setIsError(false);
         setIsLoading(true);
+        setIsEmpty(false);
         const { results, total_pages } = await fetchPhotos(query, page);
         if (results.length === 0) {
           setIsEmpty(true);
@@ -46,6 +48,7 @@ function App() {
         setIsVisible(page < total_pages);
       } catch (error) {
         setIsError(true);
+        setErrorName(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -71,7 +74,7 @@ function App() {
   return (
     <>
       <SearchBar onSubmit={onSetQueryValue} />
-      {isError && <Error />}
+      {isError && <Error errorName={errorName} />}
       {images.length > 0 && (
         <ImageGallery images={images} handleOpen={handleOpen} />
       )}
