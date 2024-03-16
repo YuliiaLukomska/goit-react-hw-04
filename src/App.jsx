@@ -43,7 +43,6 @@ function App() {
           return;
         }
         setImages((prevState) => [...prevState, ...results]);
-        // якщо у нас page<загальної сторінки,то кнопка loadMore буде показуватись
         setIsVisible(page < total_pages);
       } catch (error) {
         setIsError(true);

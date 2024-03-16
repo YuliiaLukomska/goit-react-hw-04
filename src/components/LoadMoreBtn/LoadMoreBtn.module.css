@@ -1,0 +1,9 @@
+.loadMoreBtn {
+  padding: 8px;
+  border-radius: 14px;
+  background-color: gray;
+  color: white;
+  display: block;
+  margin-left: 625px;
+  width: 100px;
+}

@@ -9,7 +9,6 @@ const fetchPhotos = async (query, page) => {
       client_id: ACCESS_KEY,
       query: query,
       page: page,
-      // per_page: 10,
     },
   });
 
