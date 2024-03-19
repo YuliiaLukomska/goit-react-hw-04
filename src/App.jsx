@@ -22,6 +22,9 @@ function App() {
   const [modalAlt, setModalAlt] = useState("");
 
   const onSetQueryValue = (queryValue) => {
+    if (queryValue === query) {
+      return;
+    }
     setQuery(queryValue);
     setImages([]);
     setPage(1);
@@ -35,10 +38,8 @@ function App() {
       return;
     }
     const getPhotosByQuery = async () => {
+      setIsLoading(true);
       try {
-        setIsError(false);
-        setIsLoading(true);
-        setIsEmpty(false);
         const { results, total_pages } = await fetchPhotos(query, page);
         if (results.length === 0) {
           setIsEmpty(true);
